@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tuk_pro_app/screens/login.dart';
 
 void main() {
   runApp(const App());
@@ -14,11 +15,9 @@ class App extends StatelessWidget {
       theme: ThemeData().copyWith(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 13, 87, 167)),
+            seedColor: const Color.fromARGB(255, 232, 243, 252)),
       ),
-      home: const Scaffold(
-        body: Placeholder(),
-      ),
+      home: const LoginScreen(),
     );
   }
 }
