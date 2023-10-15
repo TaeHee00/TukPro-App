@@ -57,27 +57,37 @@ class _LoginScreenState extends State<LoginScreen> {
         // 로그인 모드
         // TODO: valid api 발급 예정
         // server login validate
-        // final loginValid = await serverPostRequest("member/login/valid", json);
-
-        // server login request
-        final response = await serverPostRequest(
-          "member/login",
+        final loginValid = await serverPostRequest(
+          "member/login/valid",
           {
-            'email': _enteredEmail,
-            'password': _enteredPassword,
+            "email": _enteredEmail,
+            "password": _enteredPassword,
           },
         );
 
-        if (response.statusCode / 100 == 4) {
+        http.Response? loginResponse;
+        switch (json.decode(loginValid.body)["message"]) {
+          case "EMAIL_MISMATCH":
+            throw Exception("존재하지 않는 계정입니다.");
+          case "PASSWORD_MISMATCH":
+            throw Exception("비밀번호가 일치하지 않습니다.");
+          case "SUCCESS":
+            // server login request
+            loginResponse = await serverPostRequest(
+              "member/login",
+              {
+                'email': _enteredEmail,
+                'password': _enteredPassword,
+              },
+            );
+        }
+
+        if (loginResponse!.statusCode / 100 == 4) {
           // 로그인 에러
           throw Exception("서버 오류");
         }
-        if (response.statusCode / 100 == 5) {
-          // 서버 에러
-          throw Exception("로그인 실패");
-        }
 
-        _loginMember = Member.fromJson(json.decode(response.body));
+        _loginMember = Member.fromJson(json.decode(loginResponse.body));
       } else {
         // 회원가입 모드
         // TODO 로그인서버 response data 수정하여 이메일 중복 등 예외처리 코드도 반환하도록하기
@@ -120,20 +130,15 @@ class _LoginScreenState extends State<LoginScreen> {
         // });
       }
     } on Exception catch (error) {
-      String? _message;
-      String expString = error.toString().split("Exception: ")[1];
       // TODO: 나중에 Exception 상속받아서 따로 관리 해주기
-      if (expString == "서버 오류") {
-        _message = expString;
-      }
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         _isLogin
             ? SnackBar(
-                content: Text(_message ?? "로그인 실패"),
+                content: Text(error.toString().split("Exception: ")[1]),
               )
             : SnackBar(
-                content: Text(_message ?? "회원가입 실패"),
+                content: Text("회원가입 실패"),
               ),
       );
     } finally {
