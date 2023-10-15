@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     var response = await http.post(
       headers: header,
       url,
-      body: _body,
+      body: json.encode(_body),
     );
     return response;
   }
@@ -43,8 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final isValid = _formKey.currentState!.validate();
 
     if (!isValid) {
-      // TODO: valid api 발급 예정
-
       // TODO: 에러 메세지
       return;
     }
@@ -57,12 +55,18 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       if (_isLogin) {
         // 로그인 모드
+        // TODO: valid api 발급 예정
+        // server login validate
+        // final loginValid = await serverPostRequest("member/login/valid", json);
+
+        // server login request
         final response = await serverPostRequest(
-            "member/login",
-            json.encode({
-              'email': _enteredEmail,
-              'password': _enteredPassword,
-            }));
+          "member/login",
+          {
+            'email': _enteredEmail,
+            'password': _enteredPassword,
+          },
+        );
 
         if (response.statusCode / 100 == 4) {
           // 로그인 에러
@@ -77,11 +81,14 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         // 회원가입 모드
         // TODO 로그인서버 response data 수정하여 이메일 중복 등 예외처리 코드도 반환하도록하기
-        final response = await serverPostRequest("member", json.encode({
-          'email': _enteredEmail,
-          'name': _enteredUsername,
-          'password': _enteredPassword,
-        }));
+        final response = await serverPostRequest(
+          "member",
+          {
+            'email': _enteredEmail,
+            'name': _enteredUsername,
+            'password': _enteredPassword,
+          },
+        );
 
         if (response.statusCode / 100 == 4) {
           // 로그인 에러
