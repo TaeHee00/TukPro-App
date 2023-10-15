@@ -25,15 +25,26 @@ class _LoginScreenState extends State<LoginScreen> {
   var _enteredUsername = "";
   Member? _loginMember;
 
+  Future<http.Response> serverPostRequest(String endpoint, Object body) async {
+    String _endpoint = endpoint;
+    Object _body = body;
+
+    var url = Uri.http('localhost:8080', _endpoint);
+    final header = {HttpHeaders.contentTypeHeader: 'application/json'};
+    var response = await http.post(
+      headers: header,
+      url,
+      body: _body,
+    );
+    return response;
+  }
+
   void _submit() async {
     final isValid = _formKey.currentState!.validate();
 
-    // if (!isValid || !_isLogin && _selectedImage == null) {
-    //   // TODO: 에러 메세지
-    //   return;
-    // }
     if (!isValid) {
       // TODO: valid api 발급 예정
+
       // TODO: 에러 메세지
       return;
     }
@@ -46,16 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       if (_isLogin) {
         // 로그인 모드
-        var url = Uri.http('localhost:8080', 'member/login', );
-        final header = {HttpHeaders.contentTypeHeader: 'application/json'};
-        var response = await http.post(
-          headers: header,
-          url,
-          body: json.encode({
-            'email': _enteredEmail,
-            'password': _enteredPassword,
-          }),
-        );
+        final response = await serverPostRequest(
+            "member/login",
+            json.encode({
+              'email': _enteredEmail,
+              'password': _enteredPassword,
+            }));
+
         if (response.statusCode / 100 == 4) {
           // 로그인 에러
           throw Exception("서버 오류");
@@ -69,17 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         // 회원가입 모드
         // TODO 로그인서버 response data 수정하여 이메일 중복 등 예외처리 코드도 반환하도록하기
-        var url = Uri.http('localhost:8080', 'member');
-        final header = {HttpHeaders.contentTypeHeader: 'application/json'};
-        var response = await http.post(
-          headers: header,
-          url,
-          body: json.encode({
-            'email': _enteredEmail,
-            'name': _enteredUsername,
-            'password': _enteredPassword,
-          }),
-        );
+        final response = await serverPostRequest("member", json.encode({
+          'email': _enteredEmail,
+          'name': _enteredUsername,
+          'password': _enteredPassword,
+        }));
 
         if (response.statusCode / 100 == 4) {
           // 로그인 에러
@@ -152,7 +154,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   width: 200,
                   // child: Image.asset("assets/images/chat.png"),
-                  child: Icon(Icons.account_circle, color: Theme.of(context).colorScheme.primary, size: 200,),
+                  child: Icon(
+                    Icons.account_circle,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 200,
+                  ),
                 ),
                 Card(
                   margin: const EdgeInsets.all(20),
@@ -165,9 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             // if (_isLogin)
-                              // UserImagePicker(onPickImage: (pickedImage) {
-                              //   _selectedImage = pickedImage;
-                              // }),
+                            // UserImagePicker(onPickImage: (pickedImage) {
+                            //   _selectedImage = pickedImage;
+                            // }),
                             TextFormField(
                               decoration:
                                   const InputDecoration(labelText: "이메일"),
