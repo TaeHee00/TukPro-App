@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../controller/member_controller.dart';
 import '../model/member.dart';
 
 
@@ -14,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  late final MemberController _memberController = MemberController(messageSender: _snackBarMessage);
 
   // 로그인 모드 - 기본값 (로그인 상태)
   bool _isLogin = true;
@@ -49,10 +51,15 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       if (_isLogin) {
         // 로그인 모드
-        var member = Member(messageSender: _snackBarMessage);
-        // server login validate
-        member.loginValid(_enteredEmail, _enteredPassword);
+        _loginMember = await _memberController.login(_enteredEmail, _enteredPassword);
 
+        if (_loginMember == null) {
+          return;
+          // TODO: Exception 처리 끝났으니 try catch 뺴도됌
+        }
+        print(_loginMember!.name);
+        print(_loginMember!.email);
+        print(_loginMember!.id);
         // final loginValid = await serverPostRequest(
         //   "member/login/valid",
         //   {
@@ -155,18 +162,18 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Container(
                   margin: const EdgeInsets.only(
-                    top: 30,
-                    bottom: 20,
+                    top: 0,
+                    bottom: 50,
                     left: 20,
                     right: 20,
                   ),
                   width: 200,
-                  // child: Image.asset("assets/images/chat.png"),
-                  child: Icon(
-                    Icons.account_circle,
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 200,
-                  ),
+                  child: Image.asset("assets/images/tino.png"),
+                  // child: Icon(
+                  //   Icons.account_circle,
+                  //   color: Theme.of(context).colorScheme.primary,
+                  //   size: 200,
+                  // ),
                 ),
                 Card(
                   margin: const EdgeInsets.all(20),
