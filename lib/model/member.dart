@@ -1,3 +1,5 @@
+
+
 class Member {
   Member({
     required this.id,
@@ -5,10 +7,10 @@ class Member {
     required this.name,
   });
 
-  Member.fromJson(Map<String, dynamic> json)
-      : id = json["id"],
-        email = json["email"],
-        name = json["name"];
+  Member.fromJson(Map<String, dynamic> json) :
+    id = json["id"],
+    email = json["email"],
+    name = json["name"];
 
   final int id;
   final String email;
