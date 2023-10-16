@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tuk_pro_app/views/main_header.dart';
 
 class ProjectListScreen extends ConsumerStatefulWidget {
   const ProjectListScreen({super.key});
@@ -21,71 +22,131 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                child: Row(
-                  children: [
-                    const SizedBox(
-                      width: 15,
-                      height: 25,
-                    ),
-                    Image.asset("assets/images/tuk_logo.png",
-                        width: 35, height: 35),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 7),
-                      child: Text(
-                        "TukPro",
-                        style: GoogleFonts.kalam(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 33,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Container(
-                child: Row(
-                  children: [
-                    Stack(
+        child: Column(
+          children: [
+            const MainHeader(),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () {
+                  return Future.delayed(const Duration(seconds: 1));
+                },
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: 3000,
+                    child: Column(
                       children: [
-                        Icon(
-                          Icons.notifications,
-                          size: 33,
-                          color: Colors.black.withOpacity(0.65),
-                        ),
-                        Positioned(
-                          top: 3,
-                          right: 4,
-                          child: Container(
-                            width: 10,
-                            height: 10,
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
+                        // const SizedBox(height: 2),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18)),
+                            color: Colors.white,
+                            child: Container(
+                              width: double.infinity,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "진행중인 프로젝트",
+                                          style: GoogleFonts.nanumGothic(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        const Icon(
+                                          Icons.chevron_right_outlined,
+                                          size: 30,
+                                        )
+                                      ],
+                                    ),
+                                    // const SizedBox(
+                                    //   height: 5,
+                                    // ),
+                                    Divider(
+                                      color: Colors.grey,
+                                    ),
+                                    const SizedBox(height: 5,),
+                                    Row(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(12.0),
+                                          child: Image.asset(
+                                            "assets/images/dummy_project_img.png",
+                                            fit: BoxFit.cover,
+                                            width: 90,
+                                            height: 100,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10,),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 6,),
+                                              Text(
+                                                "대규모 트래픽 처리 소셜 서비스",
+                                                style: GoogleFonts.nanumGothic(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                              const SizedBox(height: 15,),
+                                              Text("Task: 로그인 서버 구현",
+                                                style: GoogleFonts.nanumGothic(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                  color: Colors.black54
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                              const SizedBox(height: 5,),
+                                              Text("Task Deadline: 10-21 12:30",
+                                                style: GoogleFonts.nanumGothic(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                    color: Colors.black54
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                              const SizedBox(height: 5,),
+                                              Text("다음 회의: 10-21 21:30",
+                                                style: GoogleFonts.nanumGothic(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                    color: Colors.black54
+                                                ),
+                                                softWrap: true,
+                                              ),
+                                              const SizedBox(height: 10,)
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                  ],
+                  ),
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
