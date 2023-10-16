@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-<<<<<<< Updated upstream
-import 'package:tuk_pro_app/screens/login.dart';
-=======
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuk_pro_app/provider/login_session_provider.dart';
 import 'package:tuk_pro_app/views/login.dart';
 import 'package:tuk_pro_app/views/project_list.dart';
->>>>>>> Stashed changes
 
 void main() {
   runApp(ProviderScope(child: App()));
@@ -23,11 +19,7 @@ class App extends ConsumerWidget {
       title: "TukPro",
       theme: ThemeData().copyWith(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 232, 243, 252)),
-<<<<<<< Updated upstream
-=======
-        // textTheme: Theme.of(context).textTheme.apply(fontFamily: GoogleFonts.openSans())
->>>>>>> Stashed changes
+            seedColor: const Color.fromARGB(255, 232, 243, 252)), // textTheme: Theme.of(context).textTheme.apply(fontFamily: GoogleFonts.openSans())
       ),
       home: hasLoginSession ? ProjectListScreen() : const LoginScreen(),
     );

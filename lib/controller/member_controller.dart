@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../exception/login_exception.dart';
 import '../exception/sign_up_exception.dart';
-import '../model/member.dart';
 import '../provider/login_session_provider.dart';
+import '../models/member.dart';
 
 class MemberController{
   MemberController({
