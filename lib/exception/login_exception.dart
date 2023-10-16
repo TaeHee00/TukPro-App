@@ -15,10 +15,12 @@ class LoginException {
     if (message == "EMAIL_MISMATCH") {
       // 존재하지 않는 계정
       messageSender("존재하지 않는 계정입니다.");
+      return false;
     }
     if (message == "PASSWORD_MISMATCH") {
       // 올바르지 않은 비밀번호
       messageSender("올바르지 않은 비밀번호입니다.");
+      return false;
     }
     return true;
   }
