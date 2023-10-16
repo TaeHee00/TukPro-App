@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tuk_pro_app/screens/login.dart';
+import 'package:tuk_pro_app/views/login.dart';
 
 void main() {
   runApp(const App());

@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-import '../models/member.dart';
+import '../model/member.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,19 +24,14 @@ class _LoginScreenState extends State<LoginScreen> {
   var _enteredUsername = "";
   Member? _loginMember;
 
-  Future<http.Response> serverPostRequest(String endpoint, Object body) async {
-    String _endpoint = endpoint;
-    Object _body = body;
-
-    var url = Uri.http('localhost:8080', _endpoint);
-    final header = {HttpHeaders.contentTypeHeader: 'application/json'};
-    var response = await http.post(
-      headers: header,
-      url,
-      body: json.encode(_body),
+  void _snackBarMessage(String message) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(message),
+      ),
     );
-    return response;
   }
+
 
   void _submit() async {
     final isValid = _formKey.currentState!.validate();
@@ -55,61 +49,63 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       if (_isLogin) {
         // 로그인 모드
-        // TODO: valid api 발급 예정
+        var member = Member(messageSender: _snackBarMessage);
         // server login validate
-        final loginValid = await serverPostRequest(
-          "member/login/valid",
-          {
-            "email": _enteredEmail,
-            "password": _enteredPassword,
-          },
-        );
+        member.loginValid(_enteredEmail, _enteredPassword);
 
-        http.Response? loginResponse;
-        switch (json.decode(loginValid.body)["message"]) {
-          case "EMAIL_MISMATCH":
-            throw Exception("존재하지 않는 계정입니다.");
-          case "PASSWORD_MISMATCH":
-            throw Exception("비밀번호가 일치하지 않습니다.");
-          case "SUCCESS":
-            // server login request
-            loginResponse = await serverPostRequest(
-              "member/login",
-              {
-                'email': _enteredEmail,
-                'password': _enteredPassword,
-              },
-            );
-        }
+        // final loginValid = await serverPostRequest(
+        //   "member/login/valid",
+        //   {
+        //     "email": _enteredEmail,
+        //     "password": _enteredPassword,
+        //   },
+        // );
 
-        if (loginResponse!.statusCode / 100 == 4) {
-          // 로그인 에러
-          throw Exception("서버 오류");
-        }
+        // http.Response? loginResponse;
+        // switch (json.decode(loginValid.body)["message"]) {
+        //   case "EMAIL_MISMATCH":
+        //     throw Exception("존재하지 않는 계정입니다.");
+        //   case "PASSWORD_MISMATCH":
+        //     throw Exception("비밀번호가 일치하지 않습니다.");
+        //   case "SUCCESS":
+        //     // server login request
+        //     loginResponse = await serverPostRequest(
+        //       "member/login",
+        //       {
+        //         'email': _enteredEmail,
+        //         'password': _enteredPassword,
+        //       },
+        //     );
+        // }
 
-        _loginMember = Member.fromJson(json.decode(loginResponse.body));
+        // if (loginResponse!.statusCode / 100 == 4) {
+        //   // 로그인 에러
+        //   throw Exception("서버 오류");
+        // }
+        //
+        // _loginMember = Member.fromJson(json.decode(loginResponse.body));
       } else {
         // 회원가입 모드
         // TODO 로그인서버 response data 수정하여 이메일 중복 등 예외처리 코드도 반환하도록하기
-        final response = await serverPostRequest(
-          "member",
-          {
-            'email': _enteredEmail,
-            'name': _enteredUsername,
-            'password': _enteredPassword,
-          },
-        );
+        // final response = await serverPostRequest(
+        //   "member",
+        //   {
+        //     'email': _enteredEmail,
+        //     'name': _enteredUsername,
+        //     'password': _enteredPassword,
+        //   },
+        // );
 
-        if (response.statusCode / 100 == 4) {
-          // 로그인 에러
-          throw Exception("서버 오류");
-        }
-        if (response.statusCode / 100 == 5) {
-          // 서버 에러
-          throw Exception("회원가입 실패");
-        }
-
-        _loginMember = Member.fromJson(json.decode(response.body));
+        // if (response.statusCode / 100 == 4) {
+        //   // 로그인 에러
+        //   throw Exception("서버 오류");
+        // }
+        // if (response.statusCode / 100 == 5) {
+        //   // 서버 에러
+        //   throw Exception("회원가입 실패");
+        // }
+        //
+        // _loginMember = Member.fromJson(json.decode(response.body));
         // firebase에 경로를 만들어줌
         // final storageRef = FirebaseStorage.instance
         //     .ref()
@@ -272,6 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-        ));
+        ),
+    );
   }
 }
