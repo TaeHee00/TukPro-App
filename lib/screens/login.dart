@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-import '../controller/member_controller.dart';
-import '../model/member.dart';
-
+import '../models/member.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  late final MemberController _memberController = MemberController(messageSender: _snackBarMessage);
 
   // 로그인 모드 - 기본값 (로그인 상태)
   bool _isLogin = true;
@@ -26,14 +25,19 @@ class _LoginScreenState extends State<LoginScreen> {
   var _enteredUsername = "";
   Member? _loginMember;
 
-  void _snackBarMessage(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(message, softWrap: true,),
-      ),
-    );
-  }
+  Future<http.Response> serverPostRequest(String endpoint, Object body) async {
+    String _endpoint = endpoint;
+    Object _body = body;
 
+    var url = Uri.http('localhost:8080', _endpoint);
+    final header = {HttpHeaders.contentTypeHeader: 'application/json'};
+    var response = await http.post(
+      headers: header,
+      url,
+      body: json.encode(_body),
+    );
+    return response;
+  }
 
   void _submit() async {
     final isValid = _formKey.currentState!.validate();
@@ -51,28 +55,92 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       if (_isLogin) {
         // 로그인 모드
-        _loginMember = await _memberController.login(_enteredEmail, _enteredPassword);
+        // TODO: valid api 발급 예정
+        // server login validate
+        final loginValid = await serverPostRequest(
+          "member/login/valid",
+          {
+            "email": _enteredEmail,
+            "password": _enteredPassword,
+          },
+        );
 
-        // 로그인 실패시 빠져나감
-        if (_loginMember == null) {
-          return;
+        http.Response? loginResponse;
+        switch (json.decode(loginValid.body)["message"]) {
+          case "EMAIL_MISMATCH":
+            throw Exception("존재하지 않는 계정입니다.");
+          case "PASSWORD_MISMATCH":
+            throw Exception("비밀번호가 일치하지 않습니다.");
+          case "SUCCESS":
+            // server login request
+            loginResponse = await serverPostRequest(
+              "member/login",
+              {
+                'email': _enteredEmail,
+                'password': _enteredPassword,
+              },
+            );
         }
+
+        if (loginResponse!.statusCode / 100 == 4) {
+          // 로그인 에러
+          throw Exception("서버 오류");
+        }
+
+        _loginMember = Member.fromJson(json.decode(loginResponse.body));
       } else {
         // 회원가입 모드
-        _loginMember = await _memberController.signUp(_enteredEmail, _enteredPassword, _enteredUsername);
+        // TODO 로그인서버 response data 수정하여 이메일 중복 등 예외처리 코드도 반환하도록하기
+        final response = await serverPostRequest(
+          "member",
+          {
+            'email': _enteredEmail,
+            'name': _enteredUsername,
+            'password': _enteredPassword,
+          },
+        );
 
-        // 회원가입 실패시 빠져나감
-        if (_loginMember == null) {
-          return;
+        if (response.statusCode / 100 == 4) {
+          // 로그인 에러
+          throw Exception("서버 오류");
         }
-        // TODO: 프로필 사진 저장 기능 구현
+        if (response.statusCode / 100 == 5) {
+          // 서버 에러
+          throw Exception("회원가입 실패");
+        }
+
+        _loginMember = Member.fromJson(json.decode(response.body));
+        // firebase에 경로를 만들어줌
+        // final storageRef = FirebaseStorage.instance
+        //     .ref()
+        //     .child("user_images")
+        //     .child("${userCredentials.user!.uid}.jpg");
+        // 그 경로에 이미지 전달
+        // await storageRef.putFile(_selectedImage!);
+        // final imageUrl = await storageRef.getDownloadURL();
+        // print(imageUrl);
+
+        // FirebaseFirestore.instance
+        //     .collection("users")
+        //     .doc(userCredentials.user!.uid)
+        //     .set({
+        //   "username": _enteredUsername,
+        //   "email": _enteredEmail,
+        //   "image_url": imageUrl,
+        // });
       }
     } on Exception catch (error) {
       // TODO: 나중에 Exception 상속받아서 따로 관리 해주기
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("System Error"),
-              ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        _isLogin
+            ? SnackBar(
+                content: Text(error.toString().split("Exception: ")[1]),
+              )
+            : SnackBar(
+                content: Text("회원가입 실패"),
+              ),
+      );
     } finally {
       setState(() {
         _isAuthenticating = false;
@@ -91,13 +159,18 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Container(
                   margin: const EdgeInsets.only(
-                    top: 0,
-                    bottom: 50,
+                    top: 30,
+                    bottom: 20,
                     left: 20,
                     right: 20,
                   ),
                   width: 200,
-                  child: Image.asset("assets/images/tino.png"),
+                  // child: Image.asset("assets/images/chat.png"),
+                  child: Icon(
+                    Icons.account_circle,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 200,
+                  ),
                 ),
                 Card(
                   margin: const EdgeInsets.all(20),
@@ -132,22 +205,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               },
                             ),
-                            TextFormField(
-                              decoration:
-                                  const InputDecoration(labelText: "비밀번호"),
-                              obscureText: true,
-                              onSaved: (value) => _enteredPassword = value!,
-                              validator: (value) {
-                                if (value == null ||
-                                    value.trim().isEmpty ||
-                                    value.trim().length < 6) {
-                                  return _isLogin
-                                      ? "비밀번호가 유효하지 않습니다."
-                                      : "비밀번호는 6자리 이상의 문자로 구성해주세요";
-                                }
-                                return null;
-                              },
-                            ),
                             if (!_isLogin)
                               TextFormField(
                                 decoration: const InputDecoration(
@@ -166,6 +223,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                   return null;
                                 },
                               ),
+                            TextFormField(
+                              decoration:
+                                  const InputDecoration(labelText: "비밀번호"),
+                              obscureText: true,
+                              onSaved: (value) => _enteredPassword = value!,
+                              validator: (value) {
+                                if (value == null ||
+                                    value.trim().isEmpty ||
+                                    value.trim().length < 6) {
+                                  return _isLogin
+                                      ? "비밀번호가 유효하지 않습니다."
+                                      : "비밀번호는 6자리 이상의 문자로 구성해주세요";
+                                }
+                                return null;
+                              },
+                            ),
                             const SizedBox(
                               height: 12,
                             ),
@@ -199,7 +272,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-        ),
-    );
+        ));
   }
 }
