@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-class LoginException {
-  LoginException(this.messageSender);
+class SignUpException {
+  SignUpException(this.messageSender);
   final void Function(String message) messageSender;
 
   bool test(Response response) {
@@ -12,14 +12,14 @@ class LoginException {
     }
 
     final String message = response.data!["message"];
-    if (message == "EMAIL_MISMATCH") {
+    if (message == "EMAIL_DUPLICATED") {
       // 존재하지 않는 계정
-      messageSender("존재하지 않는 계정입니다.");
+      messageSender("이미 사용중인 이메일입니다.  다른 이메일을 사용해주세요.");
       return false;
     }
-    if (message == "PASSWORD_MISMATCH") {
+    if (message == "NAME_DUPLICATED") {
       // 올바르지 않은 비밀번호
-      messageSender("올바르지 않은 비밀번호입니다.");
+      messageSender("이미 사용중인 닉네임입니다.  다른 닉네임을 사용해주세요.");
       return false;
     }
 
