@@ -24,6 +24,35 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.0),
+          topRight: Radius.circular(20.0),
+        ),
+        child: BottomNavigationBar(
+          selectedItemColor: const Color.fromARGB(255, 136, 136, 203),
+          selectedLabelStyle: GoogleFonts.nanumGothic(
+            fontWeight: FontWeight.w800,
+            fontSize: 13,
+          ),
+          unselectedItemColor: null,
+          unselectedLabelStyle: GoogleFonts.nanumGothic(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+          iconSize: 30,
+          type: BottomNavigationBarType.fixed,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "홈",),
+            BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: "랭킹",),
+            BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "모집",),
+            BottomNavigationBarItem(icon: Icon(Icons.message_rounded), label: "메시지",),
+            BottomNavigationBarItem(icon: Icon(Icons.account_circle, size: 29,), label: "내 정보",),
+          ],
+          currentIndex: _selectedIndex, // 지정 인덱스로 이동
+          onTap: _onItemTapped,
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
