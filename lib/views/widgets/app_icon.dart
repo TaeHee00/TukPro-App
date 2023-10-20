@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
 
 class AppIcon extends StatelessWidget {
-  const AppIcon({super.key, required this.imageSelect});
-  final imageSelect;
+  const AppIcon({super.key, required this.imageName, required this.isHome});
+  final imageName;
+  final bool isHome;
+
+  static const react = "assets/images/react.png";
+  static const angular = "assets/images/angular.png";
+  static const vue = "assets/images/vue.png";
+  static const svelte = "assets/images/svelte.png";
+
+  static const flutter = "assets/images/flutter.png";
 
   @override
   Widget build(BuildContext context) {
+    String? image;
+
+    switch(imageName) {
+      case "react":
+        image = react;
+      case "angular":
+        image = angular;
+      case "vue":
+        image = vue;
+      case "svelte":
+        image = svelte;
+      case "flutter":
+        image = flutter;
+    }
 
     return Container(
-      width: 50,
-      height: 50,
+      width: isHome ? 50 : 60,
+      height: isHome ? 50 : 60,
       decoration: BoxDecoration(
         color: const Color.fromARGB(
             255, 135, 51, 253),
@@ -26,8 +48,8 @@ class AppIcon extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: Container(
-        width: 45,
-        height: 45,
+        width: isHome ? 45 : 55,
+        height: isHome ? 45 : 55,
         decoration: const BoxDecoration(
           color: Colors.white,
           shape: BoxShape.circle,
@@ -38,14 +60,13 @@ class AppIcon extends StatelessWidget {
           children: [
             Container(
               alignment: Alignment.center,
-              width: imageSelect == 0 ? 35 : 40,
-              height: imageSelect == 0 ? 35 : 40,
+              width: isHome ? 35 : 45,
+              height:isHome ? 35 : 45,
               child: ClipRRect(
                 borderRadius:
                 BorderRadius.circular(40),
                 child: Image.asset(
-                  imageSelect == 0 ?
-                  "assets/images/flutter.png" : "assets/images/spring-boot.png",
+                  image!,
                 ),
               ),
             ),
