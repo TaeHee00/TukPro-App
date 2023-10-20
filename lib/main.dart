@@ -17,6 +17,7 @@ class App extends ConsumerWidget {
 
     return MaterialApp(
       title: "TukPro",
+      debugShowCheckedModeBanner: false,
       theme: ThemeData().copyWith(
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 232, 243, 252)), // textTheme: Theme.of(context).textTheme.apply(fontFamily: GoogleFonts.openSans())
