@@ -73,6 +73,10 @@ flutter:
     - assets/images/kotlin.png
     - assets/images/flutter.png
     - assets/images/spring-boot.png
+    - assets/images/react.png
+    - assets/images/vue.png
+    - assets/images/angular.png
+    - assets/images/svelte.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
