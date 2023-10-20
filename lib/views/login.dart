@@ -126,7 +126,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           //   _selectedImage = pickedImage;
                           // }),
                           TextFormField(
-                            decoration: const InputDecoration(labelText: "이메일"),
+                            decoration: const InputDecoration(labelText: "이메일", labelStyle: TextStyle(fontFamily: "Pretendard",),),
                             keyboardType: TextInputType.emailAddress,
                             autocorrect: false,
                             textCapitalization: TextCapitalization.none,
@@ -145,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           TextFormField(
                             decoration:
-                                const InputDecoration(labelText: "비밀번호", ),
+                                const InputDecoration(labelText: "비밀번호", labelStyle: TextStyle(fontFamily: "Pretendard",),),
                             obscureText: true,
                             onSaved: (value) => _enteredPassword = value!,
                             validator: (value) {
@@ -163,6 +163,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             TextFormField(
                               decoration: const InputDecoration(
                                 labelText: "닉네임",
+                                labelStyle: TextStyle(fontFamily: "Pretendard",),
                               ),
                               enableSuggestions: false,
                               onSaved: (value) {
@@ -208,6 +209,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .secondary,
+                                      fontFamily: "Pretendard",
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -224,6 +226,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             },
                             child: Text(
                               _isLogin ? "계정이 없으신가요?" : "계정이 있으신가요? 로그인하세요!",
+                              style: TextStyle(
+                                fontFamily: "Pretendard",
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ),
                         ],
