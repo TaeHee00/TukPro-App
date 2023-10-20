@@ -23,12 +23,12 @@ class Project extends StatelessWidget {
               Positioned(
                 top: 3,
                 right: 3,
-                child: AppIcon(imageSelect: 1),
+                child: AppIcon(imageName: "flutter", isHome: true),
               ),
               Positioned(
                 top: 3,
                 right: 27,
-                child: AppIcon(imageSelect: 0),
+                child: AppIcon(imageName: "flutter", isHome: true),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
