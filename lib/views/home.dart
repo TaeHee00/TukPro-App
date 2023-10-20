@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const MainHeader(),
+        const MainHeader(isHome: true),
         Expanded(
           child: RefreshIndicator(
             onRefresh: () {
@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
               future: Future.delayed(const Duration(milliseconds: 300)),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return SingleChildScrollView(
+                  return const SingleChildScrollView(
                     child: Padding(
                       padding:
                       EdgeInsets.symmetric(horizontal: 10, vertical: 5),
