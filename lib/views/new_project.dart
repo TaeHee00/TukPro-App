@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tuk_pro_app/views/widgets/app_icon.dart';
+import 'package:tuk_pro_app/views/widgets/app_dev_icons.dart';
+import 'package:tuk_pro_app/views/widgets/back_icons.dart';
 import 'package:tuk_pro_app/views/widgets/front_icons.dart';
 import 'package:tuk_pro_app/views/widgets/main_header.dart';
 import 'package:tuk_pro_app/views/widgets/new_project_category.dart';
-import 'package:tuk_pro_app/views/widgets/new_project_front.dart';
 
 class NewProjectScreen extends StatefulWidget {
   const NewProjectScreen({super.key});
@@ -25,7 +25,8 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -65,10 +66,12 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                     child: TextField(
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 1.3),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1.3),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey, width: 1.3),
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 1.3),
                         ),
                       ),
                     ),
@@ -90,10 +93,12 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                     child: TextField(
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 1.3),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 1.3),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey, width: 1.3),
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 1.3),
                         ),
                       ),
                     ),
@@ -112,9 +117,8 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: Colors.grey, width: 1.3)
-                    ),
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: Colors.grey, width: 1.3)),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -140,7 +144,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          FrontIcons(),
+                          AppDevIcons(),
                           const SizedBox(height: 20),
                           Text(
                             "백엔드",
@@ -151,12 +155,36 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          FrontIcons(),
+                          const BackIcons(),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => const Color.fromARGB(255, 136, 136, 203),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text("프로젝트 생성",
+                        style: GoogleFonts.nanumGothic(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
