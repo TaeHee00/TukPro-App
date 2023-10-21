@@ -77,6 +77,11 @@ flutter:
     - assets/images/vue.png
     - assets/images/angular.png
     - assets/images/svelte.png
+    - assets/images/nodejs.png
+    - assets/images/nestjs.png
+    - assets/images/flask.png
+    - assets/images/django.png
+    - assets/images/swift.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
