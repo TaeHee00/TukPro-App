@@ -12,6 +12,16 @@ class NewProjectAppIcon extends StatelessWidget {
 
   static const flutter = "assets/images/flutter.png";
 
+  static const spring = "assets/images/spring-boot.png";
+  static const nodejs = "assets/images/nodejs.png";
+  static const nestjs = "assets/images/nestjs.png";
+  static const flask = "assets/images/flask.png";
+  static const django = "assets/images/django.png";
+
+  static const swift = "assets/images/swift.png";
+  static const kotlin = "assets/images/kotlin.png";
+
+
   @override
   Widget build(BuildContext context) {
     String? image;
@@ -27,13 +37,29 @@ class NewProjectAppIcon extends StatelessWidget {
         image = svelte;
       case "flutter":
         image = flutter;
+      case "spring":
+        image = spring;
+      case "nodejs":
+        image = nodejs;
+      case "nestjs":
+        image = nestjs;
+      case "django":
+        image = django;
+      case "flask":
+        image = flask;
+      case "kotlin":
+        image = kotlin;
+      case "swift":
+        image = swift;
+      case "react-native":
+        image = react;
     }
 
     return Container(
       width: 60,
       height: 60,
       decoration: BoxDecoration(
-        color: isSelected ? Colors.deepOrangeAccent : Colors.grey,
+        color: isSelected ? Colors.redAccent : Colors.grey,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
